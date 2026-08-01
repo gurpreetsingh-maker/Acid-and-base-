@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Titration Station — Acids, Bases &amp; pH | MYP Grade 10</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eaf4ff;
+  --bg2:#dcebfb;
+  --panel:#ffffff;
+  --panel-soft:#f4f9ff;
+  --ink:#182432;
+  --ink-soft:#51677d;
+  --teal:#0ea5a6;
+  --teal-dark:#0a7f80;
+  --purple:#7c4dff;
+  --purple-soft:#efe9ff;
+  --coral:#ff6b5b;
+  --amber:#f5a623;
+  --line:#d4e6f7;
+  --green-bar:#16a34a;
+  --amber-bar:#d97706;
+  --red-bar:#dc2626;
+  --radius:20px;
+  --radius-sm:12px;
+  --shadow:0 10px 28px rgba(19,42,66,.12);
+  --shadow-sm:0 4px 12px rgba(19,42,66,.08);
+  --font-display:'Baloo 2', sans-serif;
+  --font-body:'Nunito', sans-serif;
+  --font-mono:'Space Mono', monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  background:
+    radial-gradient(circle at 15% 0%, #f3f9ff 0%, transparent 45%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+  color:var(--ink);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:var(--font-display); margin:0; font-weight:700;}
+button{font-family:var(--font-body); cursor:pointer;}
+.hidden{display:none !important;}
+.visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0);}
+
+/* ---------- scrollbars nicer ---------- */
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-thumb{background:#b9d3ee; border-radius:8px;}
+
+/* ================= SPLASH ================= */
+#splash{
+  min-height:100vh; display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at 20% 20%, #fff7e0 0%, transparent 35%),
+    radial-gradient(circle at 85% 15%, #e3d8ff 0%, transparent 40%),
+    radial-gradient(circle at 50% 100%, #cdeeee 0%, transparent 45%),
+    linear-gradient(160deg,#eaf4ff 0%, #dcebfb 60%, #cfe6f9 100%);
+}
+.splash-card{
+  background:var(--panel);
+  border-radius:28px;
+  max-width:720px; width:100%;
+  padding:40px 40px 32px;
+  box-shadow:var(--shadow);
+  text-align:center;
+  border:3px solid #fff;
+  position:relative;
+  overflow:hidden;
+}
+.splash-card::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(circle at 90% -10%, rgba(124,77,255,.10), transparent 40%),
+    radial-gradient(circle at -10% 110%, rgba(14,165,166,.14), transparent 40%);
+  pointer-events:none;
+}
+.splash-flask{width:96px; height:96px; margin:0 auto 6px; display:block;}
+.splash-eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--purple-soft); color:var(--purple);
+  font-family:var(--font-display); font-weight:700; font-size:13px;
+  padding:6px 16px; border-radius:999px; letter-spacing:.04em;
+  margin-bottom:14px;
+}
+.splash-card h1{font-size:clamp(28px,5vw,40px); color:var(--ink); line-height:1.1; margin-bottom:10px;}
+.splash-card h1 span{
+  background:linear-gradient(90deg,var(--coral),var(--amber) 35%,#57b87b 60%,var(--teal-dark) 80%,var(--purple));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.splash-sub{color:var(--ink-soft); font-size:16px; max-width:520px; margin:0 auto 22px; font-weight:600;}
+.myp-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px; margin:0 0 26px; text-align:left;
+}
+.myp-chip{
+  background:var(--panel-soft); border:2px solid var(--line); border-radius:var(--radius-sm);
+  padding:10px 12px;
+}
+.myp-chip .k{font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--teal-dark); font-weight:800;}
+.myp-chip .v{font-size:13.5px; font-weight:700; color:var(--ink); margin-top:2px;}
+#startBtn{
+  font-family:var(--font-display); font-size:20px; font-weight:700; color:#fff;
+  background:linear-gradient(90deg,var(--teal),var(--teal-dark));
+  border:none; border-radius:999px; padding:16px 44px;
+  box-shadow:0 10px 24px rgba(14,165,166,.38);
+  animation:pulseStart 2.1s ease-in-out infinite;
+  position:relative; z-index:1;
+}
+#startBtn:hover{transform:translateY(-2px);}
+@keyframes pulseStart{
+  0%,100%{transform:scale(1); box-shadow:0 10px 24px rgba(14,165,166,.38);}
+  50%{transform:scale(1.045); box-shadow:0 14px 30px rgba(14,165,166,.5);}
+}
+.splash-foot{margin-top:16px; font-size:12px; color:var(--ink-soft); font-weight:600;}
+
+/* ================= APP SHELL ================= */
+#simRoot{max-width:1360px; margin:0 auto; padding:16px 16px 60px;}
+.topbar{
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  margin-bottom:14px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-icon{width:38px; height:38px; flex:none;}
+.brand h1{font-size:20px; color:var(--ink);}
+.brand p{margin:0; font-size:12px; color:var(--ink-soft); font-weight:700;}
+.top-actions{display:flex; gap:8px; align-items:center;}
+.btn{
+  border-radius:999px; border:2px solid var(--line); background:var(--panel);
+  padding:9px 16px; font-weight:800; font-size:13px; color:var(--ink-soft);
+  display:inline-flex; align-items:center; gap:6px; transition:.15s;
+}
+.btn:hover{border-color:var(--teal); color:var(--teal-dark); transform:translateY(-1px);}
+.btn-primary{
+  background:linear-gradient(90deg,var(--teal),var(--teal-dark)); color:#fff; border:none;
+  box-shadow:0 6px 16px rgba(14,165,166,.3);
+}
+.btn-primary:hover{color:#fff; transform:translateY(-1px);}
+.btn-primary:disabled{
+  background:#c9d7e3; color:#8ea1b3; box-shadow:none; cursor:not-allowed; transform:none;
+}
+.btn-ghost{background:transparent; border:2px dashed var(--line);}
+
+/* ---------- timeline ---------- */
+.timeline{
+  display:flex; align-items:center; background:var(--panel); border-radius:999px;
+  padding:10px 18px; box-shadow:var(--shadow-sm); margin-bottom:18px; overflow-x:auto;
+}
+.tl-step{
+  display:flex; align-items:center; gap:8px; flex:none; padding:6px 10px; border-radius:999px;
+  font-weight:800; font-size:12.5px; color:var(--ink-soft); white-space:nowrap; transition:.2s;
+}
+.tl-dot{
+  width:24px; height:24px; border-radius:50%; background:#e5edf5; color:#9db0c2;
+  display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex:none;
+}
+.tl-step.active{color:var(--teal-dark); background:#e3f7f6;}
+.tl-step.active .tl-dot{background:var(--teal); color:#fff;}
+.tl-step.complete .tl-dot{background:#57b87b; color:#fff;}
+.tl-step.complete{color:#2e8e56;}
+.tl-connector{width:22px; height:2px; background:var(--line); flex:none; margin:0 2px;}
+
+/* ---------- layout ---------- */
+.layout{display:grid; grid-template-columns:1.25fr 1fr; gap:16px; align-items:start;}
+@media(max-width:980px){.layout{grid-template-columns:1fr;}}
+
+.panel{background:var(--panel); border-radius:var(--radius); box-shadow:var(--shadow); padding:18px;}
+.scene-panel{position:relative;}
+.phase-banner{
+  display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;
+}
+.phase-badge{
+  font-family:var(--font-display); font-size:11px; font-weight:800; letter-spacing:.05em;
+  text-transform:uppercase; background:var(--purple-soft); color:var(--purple); padding:5px 12px; border-radius:999px;
+}
+.phase-banner h2{font-size:19px; color:var(--ink);}
+.context-text{color:var(--ink-soft); font-size:13.5px; font-weight:600; line-height:1.5; margin-bottom:10px;}
+
+svg#labScene{width:100%; height:auto; display:block; border-radius:14px; background:linear-gradient(180deg,#f4faff 0%, #e7f2ff 70%, #dcebfb 100%);}
+.scene-caption{display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:11.5px; color:var(--ink-soft); font-weight:700;}
+
+.household-wrap{margin-top:10px;}
+.household-wrap h4{font-size:12.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;}
+
+/* ---------- controls ---------- */
+.guiding-q{
+  background:linear-gradient(135deg,#fff8e6,#fff2d6); border:2px solid #ffe4a3; border-radius:var(--radius-sm);
+  padding:12px 14px; font-size:13.5px; font-weight:700; color:#7a5b12; margin-bottom:14px; line-height:1.45;
+}
+.guiding-q .q-icon{margin-right:6px;}
+.slider-block{margin-bottom:16px;}
+.slider-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
+.slider-head label{font-weight:800; font-size:13.5px; color:var(--ink);}
+.slider-val{font-family:var(--font-mono); font-size:11.5px; background:var(--panel-soft); border:1px solid var(--line); padding:2px 8px; border-radius:8px; color:var(--teal-dark); font-weight:700;}
+input[type=range]{
+  -webkit-appearance:none; width:100%; height:10px; border-radius:999px;
+  background:linear-gradient(90deg,var(--teal),var(--purple));
+  outline:none; margin:6px 0 4px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; width:24px; height:24px; border-radius:50%;
+  background:#fff; border:4px solid var(--teal-dark); cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,.25);
+}
+input[type=range]::-moz-range-thumb{
+  width:24px; height:24px; border-radius:50%; background:#fff; border:4px solid var(--teal-dark); cursor:pointer;
+}
+.slider-desc{font-size:12px; color:var(--ink-soft); font-weight:700; min-height:16px;}
+
+.predict-block{
+  background:var(--panel-soft); border:2px solid var(--line); border-radius:var(--radius-sm);
+  padding:14px; margin:14px 0;
+}
+.predict-block h4{font-size:13px; color:var(--ink); margin-bottom:10px;}
+.predict-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
+.predict-btn{
+  border:2px solid var(--line); background:#fff; border-radius:14px; padding:10px 4px;
+  display:flex; flex-direction:column; align-items:center; gap:4px; font-weight:800; font-size:11px; color:var(--ink-soft);
+  transition:.15s;
+}
+.predict-btn .emo{font-size:22px;}
+.predict-btn:hover{border-color:var(--teal); transform:translateY(-2px);}
+.predict-btn.selected{border-color:var(--teal-dark); background:#e3f7f6; color:var(--teal-dark); box-shadow:0 4px 10px rgba(14,165,166,.25);}
+@media(max-width:420px){.predict-grid{grid-template-columns:repeat(2,1fr);}}
+
+.advance-row{display:flex; gap:10px; align-items:center; margin-top:4px; flex-wrap:wrap;}
+.advance-row .btn-primary{flex:1; justify-content:center; padding:13px 16px; font-size:15px;}
+
+/* ---------- advisor chips ---------- */
+.advisor-row{display:flex; gap:10px; margin-top:16px; flex-wrap:wrap;}
+.advisor-chip{position:relative; flex:1; min-width:100px;}
+.advisor-chip button{
+  width:100%; background:var(--panel-soft); border:2px solid var(--line); border-radius:14px;
+  padding:8px 8px; display:flex; flex-direction:column; align-items:center; gap:3px;
+  font-weight:800; font-size:11px; color:var(--ink-soft);
+}
+.advisor-chip .face{font-size:22px;}
+.advisor-chip button:hover, .advisor-chip button.tapped{border-color:var(--purple); color:var(--purple); background:var(--purple-soft);}
+.advisor-tip{
+  position:absolute; bottom:100%; left:50%; transform:translateX(-50%) translateY(6px);
+  width:220px; background:var(--ink); color:#fff; font-size:12px; font-weight:700; line-height:1.4;
+  padding:10px 12px; border-radius:12px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:.15s; z-index:20;
+}
+.advisor-tip::after{content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:6px solid transparent; border-top-color:var(--ink);}
+.advisor-chip:hover .advisor-tip, .advisor-chip button.tapped + .advisor-tip{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* ---------- metrics / bars ---------- */
+.metrics-panel{margin-top:16px;}
+.metrics-panel h3{font-size:16px; margin-bottom:12px;}
+.bars-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+.bar-row{background:var(--panel-soft); border:2px solid var(--line); border-radius:14px; padding:10px 12px;}
+.bar-row .bh{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+.bar-row .bh .name{font-size:12px; font-weight:800; color:var(--ink);}
+.bar-row .bh .warn{color:var(--red-bar); font-weight:800; font-size:13px; animation:blinkWarn 1s steps(1) infinite;}
+.bar-row .bh .val{font-family:var(--font-mono); font-size:12px; font-weight:700; color:var(--ink-soft);}
+.bar-track{height:14px; border-radius:999px; background:#e4edf6; overflow:hidden;}
+.bar-fill{height:100%; border-radius:999px; width:0%; transition:width .6s cubic-bezier(.4,0,.2,1), background-color .6s;}
+@keyframes blinkWarn{50%{opacity:0;}}
+
+/* ---------- chart ---------- */
+.chart-panel{margin-top:16px;}
+.chart-panel h3{font-size:16px; margin-bottom:4px;}
+.chart-legend{display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 10px; font-size:11.5px; font-weight:700; color:var(--ink-soft);}
+.chart-legend span{display:inline-flex; align-items:center; gap:5px;}
+.chart-legend i{width:12px; height:12px; border-radius:3px; display:inline-block;}
+canvas#metricsChart{width:100%; height:260px; display:block; background:var(--panel-soft); border-radius:14px; border:2px solid var(--line);}
+
+/* ---------- modals ---------- */
+.overlay{
+  position:fixed; inset:0; background:rgba(15,24,36,.55); display:flex; align-items:center; justify-content:center;
+  padding:16px; z-index:100; backdrop-filter:blur(2px);
+}
+.modal{
+  background:#fff; border-radius:24px; max-width:640px; width:100%; max-height:92vh; overflow-y:auto;
+  padding:26px 26px 22px; box-shadow:var(--shadow); position:relative;
+}
+.modal h2{font-size:22px; margin-bottom:4px;}
+.modal .sub{color:var(--ink-soft); font-weight:700; font-size:13px; margin-bottom:14px;}
+.result-badge{
+  display:inline-flex; align-items:center; gap:8px; font-family:var(--font-display); font-weight:800; font-size:16px;
+  padding:8px 16px; border-radius:999px; margin-bottom:14px;
+}
+.result-badge.thriving{background:#e2f6e8; color:#1c7a3f;}
+.result-badge.stable{background:#e7f1fb; color:#2262a8;}
+.result-badge.stressed{background:#fff3df; color:#a06400;}
+.result-badge.crisis{background:#fde3e1; color:#b7261c;}
+.pred-compare{font-size:13.5px; font-weight:700; margin-bottom:14px; padding:10px 12px; border-radius:12px; background:var(--panel-soft); border:2px solid var(--line);}
+.outcome-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;}
+.outcome-item{display:flex; justify-content:space-between; align-items:center; background:var(--panel-soft); border-radius:10px; padding:8px 10px; font-size:12.5px; font-weight:700;}
+.outcome-item .arrow-up{color:var(--green-bar);}
+.outcome-item .arrow-down{color:var(--red-bar);}
+.outcome-item .arrow-flat{color:var(--ink-soft);}
+.chain-box{background:var(--purple-soft); border-radius:14px; padding:14px; margin-bottom:14px; font-size:13.5px; line-height:1.6; font-weight:600; color:#40308a;}
+.chain-box b{color:var(--purple);}
+.think-box{background:#fff8e6; border:2px solid #ffe4a3; border-radius:14px; padding:12px 14px; margin-bottom:14px; font-size:13px; font-weight:700; color:#7a5b12;}
+.echo-box{background:#e3f7f6; border-radius:14px; padding:14px; margin-bottom:16px;}
+.echo-box .et{font-family:var(--font-display); font-size:13.5px; color:var(--teal-dark); margin-bottom:4px;}
+.echo-box .eb{font-size:13px; color:#0a5a5b; font-weight:600; line-height:1.5;}
+.alt-box{background:var(--panel-soft); border:2px dashed var(--line); border-radius:14px; padding:12px 14px; margin-bottom:14px; font-size:13px; font-weight:700; color:var(--ink-soft); display:none;}
+.alt-box.shown{display:block;}
+.modal-actions{display:flex; gap:10px; flex-wrap:wrap;}
+.modal-actions .btn{flex:none;}
+.modal-actions .btn-primary{flex:1;}
+
+/* event modal */
+.event-modal{text-align:center;}
+.event-icon{font-size:48px; margin-bottom:6px;}
+.event-modal p{font-size:14px; color:var(--ink-soft); font-weight:600; line-height:1.6; margin:10px 0 18px;}
+.event-effect{background:#fde3e1; color:#a3261c; font-weight:800; font-size:13px; border-radius:12px; padding:10px 12px; margin-bottom:16px;}
+
+/* design your own */
+.design-panel .dyo-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:14px;}
+@media(max-width:520px){.design-panel .dyo-grid{grid-template-columns:1fr;}}
+.dyo-field label{font-size:12px; font-weight:800; color:var(--ink-soft); display:block; margin-bottom:4px;}
+.dyo-field input[type=number]{
+  width:100%; padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-family:var(--font-mono); font-size:14px;
+}
+.dyo-field textarea{
+  width:100%; min-height:80px; border-radius:12px; border:2px solid var(--line); padding:10px; font-family:var(--font-body); font-size:13px; resize:vertical;
+}
+.dyo-result{background:var(--purple-soft); border-radius:14px; padding:12px 14px; margin-top:10px; font-size:13px; font-weight:700; color:#40308a; display:none;}
+.dyo-result.shown{display:block;}
+
+/* reflection */
+.reflection-panel .r-q{margin-bottom:16px;}
+.reflection-panel .r-q label{display:block; font-weight:800; font-size:13.5px; margin-bottom:6px; color:var(--ink);}
+.reflection-panel textarea{
+  width:100%; min-height:64px; border-radius:12px; border:2px solid var(--line); padding:10px; font-family:var(--font-body); font-size:13px; resize:vertical;
+}
+.final-challenge{background:#fff3df; border:2px solid #ffdca3; border-radius:16px; padding:14px 16px; margin-bottom:18px;}
+.final-challenge h4{font-size:14px; margin-bottom:6px; color:#8a5c00;}
+.final-challenge select{padding:8px 10px; border-radius:10px; border:2px solid var(--line); font-family:var(--font-body); font-weight:700; margin-bottom:8px; width:100%;}
+
+/* ---------- toasts ---------- */
+#toast-container{position:fixed; top:16px; right:16px; z-index:200; display:flex; flex-direction:column; gap:8px; max-width:320px;}
+.toast{
+  background:var(--ink); color:#fff; padding:11px 16px; border-radius:12px; font-size:13px; font-weight:700;
+  box-shadow:var(--shadow); animation:toastIn .25s ease-out; display:flex; align-items:center; gap:8px;
+}
+.toast.good{background:#1c7a3f;}
+.toast.warn{background:#a06400;}
+@keyframes toastIn{from{transform:translateX(30px); opacity:0;} to{transform:translateX(0); opacity:1;}}
+.toast.out{animation:toastOut .25s ease-in forwards;}
+@keyframes toastOut{to{transform:translateX(30px); opacity:0;}}
+
+/* ---------- scene animations ---------- */
+.drip{opacity:0;}
+.drip.active{animation:dripFall 1s linear infinite; opacity:1;}
+@keyframes dripFall{
+  0%{transform:translateY(0); opacity:0;}
+  10%{opacity:1;}
+  85%{opacity:1;}
+  100%{transform:translateY(58px); opacity:0;}
+}
+.bubble{opacity:0;}
+.bubble.active{animation:bubbleRise 2.2s ease-in infinite;}
+@keyframes bubbleRise{
+  0%{transform:translateY(0) scale(.6); opacity:0;}
+  15%{opacity:.8;}
+  100%{transform:translateY(-46px) scale(1.1); opacity:0;}
+}
+.steam-line{opacity:0; transition:opacity .5s;}
+#endpointFlash{opacity:0; transform-origin:center;}
+#endpointFlash.flash-active{animation:flashPulse .9s ease-out;}
+@keyframes flashPulse{
+  0%{opacity:0; transform:scale(.6);}
+  35%{opacity:.85; transform:scale(1.15);}
+  100%{opacity:0; transform:scale(1.6);}
+}
+#liquidSurface{transform-box:fill-box; transform-origin:center; animation:ripple 3.2s ease-in-out infinite;}
+@keyframes ripple{
+  0%,100%{transform:scaleX(1) translateY(0);}
+  50%{transform:scaleX(1.02) translateY(-1.5px);}
+}
+#phMarker{transition:transform .7s cubic-bezier(.4,0,.2,1);}
+#flaskLiquid{transition:fill .55s ease;}
+#buretteLiquid{transition:fill .4s ease;}
+.mascot-blink{animation:blinkEye 4.5s ease-in-out infinite;}
+@keyframes blinkEye{0%,92%,100%{transform:scaleY(1);} 95%{transform:scaleY(.1);}}
+
+/* responsiveness for projector vs tablet */
+@media(min-width:1200px){
+  .brand h1{font-size:22px;}
+}
+@media(max-width:640px){
+  .predict-grid{grid-template-columns:repeat(2,1fr);}
+  .outcome-grid{grid-template-columns:1fr;}
+  .modal{padding:20px 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SPLASH SCREEN ============ -->
+<div id="splash">
+  <div class="splash-card">
+    <svg class="splash-flask" viewBox="0 0 100 100" aria-hidden="true">
+      <path d="M40 12 H60 V34 L82 78 C86 86 80 92 71 92 H29 C20 92 14 86 18 78 L40 34 Z" fill="#e3f7f6" stroke="#0a7f80" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M24 66 L76 66 L71 92 H29 Z" fill="#7c4dff" opacity="0.85"/>
+      <rect x="37" y="8" width="26" height="8" rx="3" fill="#0a7f80"/>
+      <circle cx="40" cy="76" r="3" fill="#fff" opacity=".8"/>
+      <circle cx="55" cy="82" r="2" fill="#fff" opacity=".6"/>
+    </svg>
+    <div class="splash-eyebrow">🧪 IB MYP Sciences · Grade 10</div>
+    <h1>Titration Station: <span>Acids, Bases &amp; pH</span></h1>
+    <p class="splash-sub">An interactive lab where you control the drips, read the colours, and decide when neutralisation is really "done."</p>
+    <div class="myp-grid">
+      <div class="myp-chip"><div class="k">Key Concept</div><div class="v">Form</div></div>
+      <div class="myp-chip"><div class="k">Related Concepts</div><div class="v">Function · Causality · Change</div></div>
+      <div class="myp-chip"><div class="k">ATL Skills</div><div class="v">Thinking · Research</div></div>
+      <div class="myp-chip"><div class="k">Learner Profile</div><div class="v">Thinkers · Knowledgeable · Inquirers</div></div>
+    </div>
+    <button id="startBtn">▶ Start the Simulation</button>
+    <div class="splash-foot">3 rounds · 1 free-play exploration · full reflection panel</div>
+  </div>
+</div>
+
+<!-- ============ MAIN APP ============ -->
+<div id="simRoot" class="hidden">
+  <div class="topbar">
+    <div class="brand">
+      <svg class="brand-icon" viewBox="0 0 100 100" aria-hidden="true">
+        <path d="M40 12 H60 V34 L82 78 C86 86 80 92 71 92 H29 C20 92 14 86 18 78 L40 34 Z" fill="#e3f7f6" stroke="#0a7f80" stroke-width="4" stroke-linejoin="round"/>
+        <path d="M24 66 L76 66 L71 92 H29 Z" fill="#57b87b"/>
+      </svg>
+      <div>
+        <h1>Titration Station</h1>
+        <p>Acids, Bases &amp; pH — MYP Grade 10</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="reflectionNavBtn">📓 Reflection</button>
+      <button class="btn" id="resetBtn">↺ Reset</button>
+    </div>
+  </div>
+
+  <div class="timeline" id="timeline"></div>
+
+  <div class="layout">
+    <!-- SCENE -->
+    <section class="panel scene-panel">
+      <div class="phase-banner">
+        <span class="phase-badge" id="phaseBadge">Explore</span>
+        <h2 id="phaseTitle">Exploration Round — Free Play</h2>
+      </div>
+      <p class="context-text" id="phaseContext">Move any slider and watch the flask, pH meter, and equation react in real time.</p>
+
+      <svg id="labScene" viewBox="0 0 620 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Titration lab scene">
+        <defs>
+          <linearGradient id="benchGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f4faff"/>
+            <stop offset="100%" stop-color="#dfeefb"/>
+          </linearGradient>
+          <clipPath id="flaskClip">
+            <path d="M280 96 H340 V150 L392 258 C404 288 386 312 356 312 H264 C234 312 216 288 228 258 L280 150 Z"/>
+          </clipPath>
+        </defs>
+
+        <rect x="0" y="0" width="620" height="430" fill="url(#benchGrad)"/>
+        <rect x="0" y="352" width="620" height="10" fill="#c9dcee"/>
+        <rect x="0" y="362" width="620" height="30" fill="#b9d0e6"/>
+
+        <!-- Stand -->
+        <g id="standGroup">
+          <rect x="118" y="60" width="10" height="270" rx="4" fill="#8ea1b3"/>
+          <rect x="88" y="326" width="100" height="10" rx="4" fill="#8ea1b3"/>
+          <rect x="118" y="72" width="70" height="9" rx="4" fill="#6c7f92"/>
+        </g>
+
+        <!-- Burette -->
+        <g id="buretteGroup">
+          <rect x="176" y="46" width="22" height="150" rx="6" fill="#eaf6ff" stroke="#3d5a80" stroke-width="2"/>
+          <rect id="buretteLiquid" x="179" y="52" width="16" height="70" rx="3" fill="#bfe3ff"/>
+          <g stroke="#8ea6ba" stroke-width="1">
+            <line x1="176" y1="70" x2="184" y2="70"/>
+            <line x1="176" y1="95" x2="184" y2="95"/>
+            <line x1="176" y1="120" x2="184" y2="120"/>
+            <line x1="176" y1="145" x2="184" y2="145"/>
+            <line x1="176" y1="170" x2="184" y2="170"/>
+          </g>
+          <rect x="181" y="196" width="10" height="10" fill="#3d5a80"/>
+          <rect x="184" y="206" width="4" height="10" fill="#3d5a80"/>
+          <text x="187" y="40" text-anchor="middle" font-family="Nunito" font-size="11" font-weight="800" fill="#3d5a80">NaOH</text>
+          <circle id="dripDrop" class="drip" cx="187" cy="218" r="4" fill="#bfe3ff"/>
+        </g>
+
+        <!-- Household pH strip -->
+        <g id="householdScale" transform="translate(400,54)">
+          <text x="0" y="-10" font-family="Nunito" font-size="11" font-weight="800" fill="#51677d">HOUSEHOLD pH REFERENCE</text>
+          <rect x="0" y="0" width="196" height="14" rx="7" fill="url(#phGradientRef)"/>
+          <defs>
+            <linearGradient id="phGradientRef" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#e4572e"/>
+              <stop offset="28%" stop-color="#f9c74f"/>
+              <stop offset="50%" stop-color="#90be6d"/>
+              <stop offset="64%" stop-color="#43aa8b"/>
+              <stop offset="100%" stop-color="#5c4d9e"/>
+            </linearGradient>
+          </defs>
+          <text x="0" y="34" font-family="Space Mono" font-size="9" fill="#51677d">0</text>
+          <text x="93" y="34" font-family="Space Mono" font-size="9" fill="#51677d">7</text>
+          <text x="186" y="34" font-family="Space Mono" font-size="9" fill="#51677d">14</text>
+          <!-- coffee pH5 -->
+          <g transform="translate(70,-2)"><circle r="4" fill="#5b3a29"/><text x="0" y="-8" text-anchor="middle" font-size="9" font-family="Nunito" font-weight="800" fill="#5b3a29">☕</text></g>
+          <!-- blood pH7.4 -->
+          <g transform="translate(103.5,-2)"><circle r="4" fill="#b7261c"/><text x="0" y="-8" text-anchor="middle" font-size="9" font-family="Nunito" font-weight="800" fill="#b7261c">🩸</text></g>
+          <!-- bleach pH12 -->
+          <g transform="translate(168,-2)"><circle r="4" fill="#2262a8"/><text x="0" y="-8" text-anchor="middle" font-size="9" font-family="Nunito" font-weight="800" fill="#2262a8">🧴</text></g>
+          <polygon id="phMarker" points="0,16 -6,26 6,26" fill="#182432" transform="translate(0,0)"/>
+        </g>
+
+        <!-- pH meter -->
+        <g id="phMeterGroup" transform="translate(430,150)">
+          <rect x="-4" y="0" width="70" height="46" rx="8" fill="#182432"/>
+          <rect x="2" y="6" width="58" height="22" rx="4" fill="#0f2a1e"/>
+          <text id="phReadoutText" x="31" y="22" text-anchor="middle" font-family="Space Mono" font-size="13" font-weight="700" fill="#57e29b">7.00</text>
+          <text x="31" y="40" text-anchor="middle" font-family="Nunito" font-size="9" font-weight="800" fill="#bcd3ea">pH METER</text>
+          <line x1="31" y1="46" x2="31" y2="70" stroke="#8ea1b3" stroke-width="2"/>
+        </g>
+
+        <!-- Flask + liquid -->
+        <g id="flaskGroup">
+          <g id="steamGroup">
+            <path class="steam-line" id="steam1" d="M290 90 C286 78 300 74 296 62" fill="none" stroke="#c8dcee" stroke-width="4" stroke-linecap="round"/>
+            <path class="steam-line" id="steam2" d="M312 90 C308 76 322 72 318 58" fill="none" stroke="#c8dcee" stroke-width="4" stroke-linecap="round"/>
+            <path class="steam-line" id="steam3" d="M330 90 C326 78 340 74 336 62" fill="none" stroke="#c8dcee" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <path d="M280 96 H340 V150 L392 258 C404 288 386 312 356 312 H264 C234 312 216 288 228 258 L280 150 Z" fill="#f4faff" stroke="#3d5a80" stroke-width="3" stroke-linejoin="round"/>
+          <g clip-path="url(#flaskClip)">
+            <rect id="flaskLiquid" x="220" y="230" width="180" height="90" fill="#90be6d"/>
+            <ellipse id="liquidSurface" cx="310" cy="232" rx="72" ry="7" fill="#ffffff" opacity="0.28"/>
+            <circle class="bubble" id="bub1" cx="290" cy="290" r="4" fill="#ffffff" opacity="0"/>
+            <circle class="bubble" id="bub2" cx="320" cy="300" r="3" fill="#ffffff" opacity="0"/>
+            <circle class="bubble" id="bub3" cx="305" cy="280" r="3.5" fill="#ffffff" opacity="0"/>
+          </g>
+          <!-- mascot face on flask -->
+          <g id="mascotGroup" transform="translate(310,270)">
+            <g class="mascot-blink">
+              <ellipse cx="-16" cy="0" rx="5" ry="6" fill="#182432"/>
+              <ellipse cx="16" cy="0" rx="5" ry="6" fill="#182432"/>
+            </g>
+            <path id="mascotMouth" d="M-14 16 Q0 26 14 16" stroke="#182432" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+        </g>
+
+        <!-- endpoint flash -->
+        <circle id="endpointFlash" cx="310" cy="230" r="90" fill="#ffe27a"/>
+
+        <!-- Equation -->
+        <g id="equationGroup" transform="translate(310,352)" text-anchor="middle" font-family="Space Mono" font-weight="700" font-size="15" fill="#182432">
+          <text id="eqAcid" x="-190" y="0">HCl</text>
+          <text x="-150" y="0">+</text>
+          <text id="eqBase" x="-115" y="0">NaOH</text>
+          <text id="eqArrow" x="-60" y="0">→</text>
+          <text id="eqSalt" x="10" y="0">NaCl</text>
+          <text x="55" y="0">+</text>
+          <text id="eqWater" x="90" y="0">H₂O</text>
+          <text x="0" y="20" text-anchor="middle" font-family="Nunito" font-size="9.5" font-weight="800" fill="#51677d">NEUTRALISATION EQUATION</text>
+        </g>
+      </svg>
+      <div class="scene-caption">
+        <span id="sceneCaptionLeft">Drag the sliders — the flask reacts instantly.</span>
+        <span id="sceneCaptionRight">pH scale: 0 (acidic) ↔ 14 (alkaline)</span>
+      </div>
+    </section>
+
+    <!-- CONTROLS -->
+    <section class="panel control-panel">
+      <div class="guiding-q" id="guidingQBox">
+        <span class="q-icon">🧭</span><span id="guidingQText">No prediction needed yet — just explore! What happens to the flask colour as you move each slider?</span>
+      </div>
+
+      <div class="slider-block">
+        <div class="slider-head"><label for="sldAcid">🧪 Acid strength added</label><span class="slider-val" id="valAcid">2</span></div>
+        <input type="range" min="0" max="4" step="1" id="sldAcid">
+        <div class="slider-desc" id="descAcid"></div>
+      </div>
+      <div class="slider-block">
+        <div class="slider-head"><label for="sldAlkali">💧 Alkali drops added</label><span class="slider-val" id="valAlkali">2</span></div>
+        <input type="range" min="0" max="4" step="1" id="sldAlkali">
+        <div class="slider-desc" id="descAlkali"></div>
+      </div>
+      <div class="slider-block">
+        <div class="slider-head"><label for="sldIndicator">🎨 Indicator type</label><span class="slider-val" id="valIndicator">0</span></div>
+        <input type="range" min="0" max="4" step="1" id="sldIndicator">
+        <div class="slider-desc" id="descIndicator"></div>
+      </div>
+      <div class="slider-block">
+        <div class="slider-head"><label for="sldTemp">🌡️ Temperature of solution</label><span class="slider-val" id="valTemp">1</span></div>
+        <input type="range" min="0" max="4" step="1" id="sldTemp">
+        <div class="slider-desc" id="descTemp"></div>
+      </div>
+
+      <div class="predict-block" id="predictBlock">
+        <h4>🔮 Lock in your prediction before you Advance:</h4>
+        <div class="predict-grid" id="predictGrid">
+          <button class="predict-btn" data-val="thriving"><span class="emo">🌱</span>Thriving</button>
+          <button class="predict-btn" data-val="stable"><span class="emo">⚖️</span>Stable</button>
+          <button class="predict-btn" data-val="stressed"><span class="emo">⚠️</span>Stressed</button>
+          <button class="predict-btn" data-val="crisis"><span class="emo">🔴</span>Crisis</button>
+        </div>
+      </div>
+
+      <div class="advance-row">
+        <button class="btn-primary" id="advanceBtn" disabled>Advance ▶</button>
+      </div>
+
+      <div class="advisor-row">
+        <div class="advisor-chip">
+          <button data-tip="Dr. Litmus: 'Think about Function — why does an indicator only work well over a certain pH range?'"><span class="face">🥽</span>Dr. Litmus</button>
+          <div class="advisor-tip">Dr. Litmus: "Think about Function — why does an indicator only work well over a certain pH range?"</div>
+        </div>
+        <div class="advisor-chip">
+          <button data-tip="Prof. Buret: 'Watch the Form of the titration curve — is the pH change gradual or sudden near equivalence?'"><span class="face">👩‍🔬</span>Prof. Buret</button>
+          <div class="advisor-tip">Prof. Buret: "Watch the Form of the titration curve — is the pH change gradual or sudden near equivalence?"</div>
+        </div>
+        <div class="advisor-chip">
+          <button data-tip="Capt. Neutral: 'Whoever handles this chemical downstream is affected by your Change — consider who that might be.'"><span class="face">🧑‍🚒</span>Capt. Neutral</button>
+          <div class="advisor-tip">Capt. Neutral: "Whoever handles this chemical downstream is affected by your Change — consider who that might be."</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- METRICS -->
+  <section class="panel metrics-panel">
+    <h3>📊 Tracked Resources</h3>
+    <div class="bars-grid" id="barsGrid"></div>
+  </section>
+
+  <!-- CHART -->
+  <section class="panel chart-panel">
+    <h3>📈 Metrics Across Rounds</h3>
+    <div class="chart-legend" id="chartLegend"></div>
+    <canvas id="metricsChart"></canvas>
+  </section>
+
+  <!-- DESIGN YOUR OWN (unlocked after round 3) -->
+  <section class="panel design-panel hidden" id="designPanel">
+    <h3>🛠️ Design Your Own — Beyond the Limits</h3>
+    <p class="context-text">You've unlocked custom values! Try sliders outside the normal 0–4 range (−2 to 6) and explain your creative reasoning.</p>
+    <div class="dyo-grid">
+      <div class="dyo-field"><label>Acid strength (−2 to 6)</label><input type="number" id="dyoAcid" min="-2" max="6" value="2"></div>
+      <div class="dyo-field"><label>Alkali drops (−2 to 6)</label><input type="number" id="dyoAlkali" min="-2" max="6" value="2"></div>
+      <div class="dyo-field"><label>Indicator type (−2 to 6)</label><input type="number" id="dyoIndicator" min="-2" max="6" value="0"></div>
+      <div class="dyo-field"><label>Temperature (−2 to 6)</label><input type="number" id="dyoTemp" min="-2" max="6" value="1"></div>
+    </div>
+    <div class="dyo-field" style="margin-bottom:12px;">
+      <label>Explain your creative reasoning</label>
+      <textarea id="dyoReason" placeholder="e.g. I want to test a 'negative' alkali to imagine adding more acid instead — what would that reveal about the system?"></textarea>
+    </div>
+    <div class="advance-row"><button class="btn-primary" id="dyoRunBtn">Run Custom Experiment 🧬</button></div>
+    <div class="dyo-result" id="dyoResult"></div>
+  </section>
+
+  <!-- REFLECTION -->
+  <section class="panel reflection-panel hidden" id="reflectionPanel">
+    <h3>📓 IB Reflection Panel</h3>
+    <p class="context-text">Answer honestly — there are no wrong answers here, only evidence for your thinking.</p>
+
+    <div class="final-challenge">
+      <h4>🏁 Final Challenge</h4>
+      <p style="font-size:13px; font-weight:600; color:#8a5c00; margin:0 0 8px;">You have seen the outcomes. Pick the round with the worst result, redesign <b>one variable</b>, and justify your redesign.</p>
+      <select id="worstRoundSelect"></select>
+      <textarea id="finalChallengeText" placeholder="I would change ___ from ___ to ___ because..."></textarea>
+      <div class="advance-row" style="margin-top:8px;"><button class="btn" id="saveFinalChallenge">💾 Save Redesign</button></div>
+    </div>
+
+    <div class="r-q"><label>1. What does "Form" mean in this simulation context? Give a real-world example.</label><textarea data-q="1"></textarea></div>
+    <div class="r-q"><label>2. Which single decision had the most unexpected consequence — and why were you surprised?</label><textarea data-q="2"></textarea></div>
+    <div class="r-q"><label>3. How would someone from a different cultural or economic background approach these decisions differently?</label><textarea data-q="3"></textarea></div>
+    <div class="r-q"><label>4. What would you change if you ran the simulation again? Use specific evidence from your results.</label><textarea data-q="4"></textarea></div>
+    <div class="r-q"><label>5. How does this simulation connect to a current global issue you know about outside school?</label><textarea data-q="5"></textarea></div>
+    <div class="r-q"><label>6. Which Learner Profile attribute did your decision-making best reflect: Thinkers, Knowledgeable, or Inquirers? Justify your choice.</label><textarea data-q="6"></textarea></div>
+
+    <div class="advance-row"><button class="btn-primary" id="saveReflectionBtn">💾 Save Reflection</button></div>
+  </section>
+</div>
+
+<div id="toast-container"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== DATA ===================== */
+const acidLabels=['Weak acid — dilute vinegar (start pH≈4)','Mild-weak acid (start pH≈3)','Moderate acid (start pH≈2)','Fairly strong acid (start pH≈1)','Strong acid — HCl 10M (start pH≈0)'];
+const alkaliLabels=['None added yet','Light addition','At the equivalence point','Just past equivalence','Excess alkali — well past equivalence'];
+const indicatorLabels=['Universal indicator — full colour range','Mostly universal, slight phenolphthalein blend','Even 50/50 blend of both indicators','Mostly phenolphthalein, slight universal blend','Phenolphthalein — sharp pink endpoint only'];
+const tempLabels=['0°C — icy','20°C — cool','40°C — room-warm','60°C — hot','80°C — near boiling'];
+
+const roundsConfig={
+  explore:{
+    badge:'Explore', title:'Exploration Round — Free Play',
+    context:'No prediction needed! Move any slider and just watch the flask, pH meter and equation react. Get a feel for the lab before Round 1 begins.',
+    guiding:'No prediction needed yet — just explore! What happens to the flask colour as you move each slider?',
+    defaults:{acid:2, alkali:2, indicator:0, temp:1}
+  },
+  round1:{
+    badge:'Round 1', title:'Round 1 — Strong Acid Showdown', roundNum:1,
+    context:"You're titrating hydrochloric acid with sodium hydroxide. Set your sliders, then predict what happens as neutralisation proceeds.",
+    guiding:"Predict: as you add alkali to a strong acid, how sharply will the pH jump near the equivalence point — and how does that sharp shape reflect the key concept of Form?",
+    defaults:{acid:4, alkali:0, indicator:0, temp:1},
+    echo:{title:'🌊 Real-world echo: Ocean acidification', text:'Since industrialisation, ocean surface pH has dropped from 8.2 to 8.1 — that is 26% more acidic. A change that looks tiny on the pH scale is huge for marine life, just like small slider moves swing the colour in your flask.'},
+    think:'How does the sharp jump you just saw reflect Form — the idea that a system\'s structure explains its behaviour?'
+  },
+  round2:{
+    badge:'Round 2', title:'Round 2 — The Weak Acid & the Indicator You Choose', roundNum:2,
+    context:'Switch to a weaker acid (like dilute vinegar) and decide which indicator will actually show you the true endpoint.',
+    guiding:'Predict: will phenolphthalein or universal indicator better reveal the equivalence point of a weak acid? What does this say about matching a tool\'s Function to the job?',
+    defaults:{acid:1, alkali:1, indicator:2, temp:2},
+    echo:{title:'🩸 Real-world echo: Blood pH homeostasis', text:'Human blood is tightly buffered between pH 7.35–7.45. A shift of just 0.2 units outside that range can be fatal — living systems, like your flask, can be surprisingly sensitive to small changes.'},
+    think:'Why might the "wrong" indicator make a perfectly good neutralisation look like a failure? What does this say about Function?'
+  },
+  round3:{
+    badge:'Round 3', title:'Round 3 — Excess Alkali, Heat and Ethics', roundNum:3,
+    context:'This time, decide whether to stop exactly at the endpoint or keep adding alkali past it — and consider what happens at higher temperature.',
+    guiding:'Predict: what happens to your indicator colour and salt yield if you add alkali past the equivalence point? Who might be affected if a factory made this same "keep adding" choice with real chemical waste?',
+    defaults:{acid:2, alkali:3, indicator:1, temp:3},
+    echo:{title:'🗿 Real-world echo: Acid rain', text:'Acid rain (around pH 4.2) slowly dissolves marble statues and disrupts lake ecosystems — proof that neutralisation, and its opposite, happens at civilisation scale, not just in a flask.'},
+    think:'If a factory "over-added" a chemical the way you just over-added alkali, who downstream — people, rivers, soil — would feel the Change first?'
+  }
+};
+
+const roundOrder=['explore','round1','round2','round3'];
+const timelineDef=[
+  {key:'explore', label:'Explore'},
+  {key:'round1', label:'Round 1'},
+  {key:'round2', label:'Round 2'},
+  {key:'round3', label:'Round 3'},
+  {key:'reflection', label:'Reflect'}
+];
+
+const barDefs=[
+  {key:'pH', label:'pH Value', get:r=>clamp(r.pH/14*100,0,100), display:r=>r.pH.toFixed(2)+' pH'},
+  {key:'completeness', label:'Neutralisation Completeness', get:r=>r.completeness, display:r=>Math.round(r.completeness)+'%'},
+  {key:'indicatorAcc', label:'Indicator Colour Accuracy', get:r=>r.indicatorAcc, display:r=>Math.round(r.indicatorAcc)+'%'},
+  {key:'salt', label:'Salt Formed', get:r=>r.salt, display:r=>Math.round(r.salt)+'%'},
+  {key:'volumeEq', label:'Volume at Equivalence Point', get:r=>r.volumeEq, display:r=>Math.round(r.volumeEq)+'%'}
+];
+const chartColors={pH:'#7c4dff', completeness:'#0ea5a6', indicatorAcc:'#f5a623', salt:'#ff6b5b', volumeEq:'#2262a8'};
+
+/* ===================== STATE ===================== */
+let state={
+  phase:'explore',
+  sliders:{...roundsConfig.explore.defaults},
+  predictions:{round1:null, round2:null, round3:null},
+  history:[], // {label, roundKey, pH, completeness, indicatorAcc, salt, volumeEq, category}
+  currentMods:{},
+  eventsShown:{round2:false, round3:false},
+  liveResult:null
+};
+
+/* ===================== HELPERS ===================== */
+function clamp(v,min,max){return Math.max(min,Math.min(max,v));}
+function sigmoid(x){return 1/(1+Math.exp(-x));}
+function lerp(a,b,t){return a+(b-a)*t;}
+
+function hexToRgb(hex){
+  const h=hex.replace('#','');
+  return {r:parseInt(h.substring(0,2),16), g:parseInt(h.substring(2,4),16), b:parseInt(h.substring(4,6),16)};
+}
+function rgbToHex(r,g,b){
+  return '#'+[r,g,b].map(v=>clamp(Math.round(v),0,255).toString(16).padStart(2,'0')).join('');
+}
+function mixHex(hexA,hexB,t){
+  const a=hexToRgb(hexA), b=hexToRgb(hexB);
+  return rgbToHex(lerp(a.r,b.r,t), lerp(a.g,b.g,t), lerp(a.b,b.b,t));
+}
+
+/* ===================== CHEMISTRY MODEL ===================== */
+function computeState(sliders, mods){
+  mods=mods||{};
+  const acid=sliders.acid, alkali=sliders.alkali, indicator=sliders.indicator, temp=sliders.temp;
+  const startPH=4-acid;                         // 4 (weak) .. 0 (strong)
+  const eqPH=7+(4-acid)*0.5;                     // weak acid -> higher equivalence pH (salt hydrolysis)
+  const k=1.5+acid*1.2;                          // strong acid -> sharper titration curve
+  let pH=startPH+(2*eqPH-startPH)*sigmoid(k*(alkali-2));
+  pH-=temp*0.15;                                 // warmer water -> slightly lower neutral point (Kw effect)
+  if(mods.phShift) pH+=mods.phShift;
+  pH=clamp(pH,0,14);
+
+  const completeness=alkali<=2 ? clamp(alkali/2*100,0,100) : 100;
+  const salt=clamp(Math.min(alkali,2)/2*100,0,100);
+  const volumeEq=clamp(100-Math.abs(alkali-2)*25,0,100);
+
+  const universalAcc=85;
+  const phenolAcc=clamp(100-Math.abs(eqPH-9)*15,0,100);
+  const blend=clamp(indicator,0,4)/4;
+  let indicatorAcc=universalAcc*(1-blend)+phenolAcc*blend;
+  if(mods.indicatorPenalty) indicatorAcc-=mods.indicatorPenalty;
+  indicatorAcc=clamp(indicatorAcc,0,100);
+
+  return {pH, completeness, salt, volumeEq, indicatorAcc, eqPH, startPH};
+}
+
+function categorize(result){
+  const score=(result.completeness+result.indicatorAcc+result.volumeEq)/3;
+  if(score>=80) return {key:'thriving', emoji:'🌱', label:'Thriving'};
+  if(score>=60) return {key:'stable', emoji:'⚖️', label:'Stable'};
+  if(score>=40) return {key:'stressed', emoji:'⚠️', label:'Resources Stressed'};
+  return {key:'crisis', emoji:'🔴', label:'Crisis'};
+}
+
+const universalStops=[
+  {pH:0,color:'#e4572e'},{pH:2,color:'#f77f00'},{pH:4,color:'#f9c74f'},
+  {pH:6,color:'#eae151'},{pH:7,color:'#90be6d'},{pH:9,color:'#43aa8b'},
+  {pH:11,color:'#4d908e'},{pH:14,color:'#5c4d9e'}
+];
+function universalColor(pH){
+  pH=clamp(pH,0,14);
+  for(let i=0;i<universalStops.length-1;i++){
+    const a=universalStops[i], b=universalStops[i+1];
+    if(pH>=a.pH && pH<=b.pH){
+      const t=(pH-a.pH)/(b.pH-a.pH || 1);
+      return mixHex(a.color,b.color,t);
+    }
+  }
+  return universalStops[universalStops.length-1].color;
+}
+function phenolColor(pH){
+  if(pH<8.2) return '#f7f3e9';
+  if(pH>=10) return '#ff3d9a';
+  const t=(pH-8.2)/1.8;
+  return mixHex('#f7f3e9','#ff3d9a',t);
+}
+function pHColor(pH, indicatorSlider){
+  const blend=clamp(indicatorSlider,0,4)/4;
+  return mixHex(universalColor(pH), phenolColor(pH), blend);
+}
+function pHtoX(pH){ return clamp(pH,0,14)/14*196; }
+
+/* ===================== DOM CACHE ===================== */
+const el={};
+function cache(){
+  ['splash','startBtn','simRoot','reflectionNavBtn','resetBtn','timeline',
+   'phaseBadge','phaseTitle','phaseContext','guidingQText',
+   'sldAcid','sldAlkali','sldIndicator','sldTemp',
+   'valAcid','valAlkali','valIndicator','valTemp',
+   'descAcid','descAlkali','descIndicator','descTemp',
+   'predictBlock','predictGrid','advanceBtn',
+   'barsGrid','metricsChart','chartLegend',
+   'designPanel','dyoAcid','dyoAlkali','dyoIndicator','dyoTemp','dyoReason','dyoRunBtn','dyoResult',
+   'reflectionPanel','worstRoundSelect','finalChallengeText','saveFinalChallenge','saveReflectionBtn',
+   'flaskLiquid','liquidSurface','phReadoutText','buretteLiquid','dripDrop','phMarker',
+   'eqAcid','eqBase','eqSalt','eqWater','endpointFlash','mascotMouth',
+   'bub1','bub2','bub3','steam1','steam2','steam3','sceneCaptionLeft'
+  ].forEach(id=>{el[id]=document.getElementById(id);});
+}
+
+/* ===================== TOASTS ===================== */
+function showToast(msg, cls){
+  const c=document.getElementById('toast-container');
+  const t=document.createElement('div');
+  t.className='toast'+(cls?(' '+cls):'');
+  t.textContent=msg;
+  c.appendChild(t);
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(),260); }, 3200);
+}
+
+/* ===================== TIMELINE ===================== */
+function renderTimeline(){
+  const order=['explore','round1','round2','round3','reflection'];
+  let currentIdx=order.indexOf(state.phase);
+  if(state.phase==='design') currentIdx=order.indexOf('round3'); // design counts as after round3 complete
+  el.timeline.innerHTML='';
+  timelineDef.forEach((step,i)=>{
+    const wrap=document.createElement('div');
+    let cls='tl-step';
+    if(i<currentIdx || (i===currentIdx && state.phase==='reflection')) cls+=' complete';
+    else if(i===currentIdx) cls+=' active';
+    wrap.className=cls;
+    wrap.innerHTML='<span class="tl-dot">'+(i+1)+'</span><span>'+step.label+'</span>';
+    el.timeline.appendChild(wrap);
+    if(i<timelineDef.length-1){
+      const conn=document.createElement('div');
+      conn.className='tl-connector';
+      el.timeline.appendChild(conn);
+    }
+  });
+}
+
+/* ===================== SLIDER LABELS ===================== */
+function refreshSliderUI(){
+  el.sldAcid.value=state.sliders.acid; el.valAcid.textContent=state.sliders.acid; el.descAcid.textContent=acidLabels[state.sliders.acid];
+  el.sldAlkali.value=state.sliders.alkali; el.valAlkali.textContent=state.sliders.alkali; el.descAlkali.textContent=alkaliLabels[state.sliders.alkali];
+  el.sldIndicator.value=state.sliders.indicator; el.valIndicator.textContent=state.sliders.indicator; el.descIndicator.textContent=indicatorLabels[state.sliders.indicator];
+  el.sldTemp.value=state.sliders.temp; el.valTemp.textContent=state.sliders.temp; el.descTemp.textContent=tempLabels[state.sliders.temp];
+}
+
+/* ===================== SCENE VISUALS ===================== */
+function updateSceneVisuals(){
+  const result=computeState(state.sliders, state.currentMods);
+  state.liveResult=result;
+  const color=pHColor(result.pH, state.sliders.indicator);
+
+  el.flaskLiquid.setAttribute('fill', color);
+  el.phReadoutText.textContent=result.pH.toFixed(2);
+  el.phReadoutText.setAttribute('fill', result.pH<7?'#ff8a80':(result.pH>7?'#82c4ff':'#57e29b'));
+
+  // burette liquid always pale blue (NaOH), level drops slightly as alkali increases (visual depletion)
+  const buretteH=70-state.sliders.alkali*8;
+  el.buretteLiquid.setAttribute('height', Math.max(18,buretteH));
+
+  // drip animation
+  const dripping=state.sliders.alkali>0;
+  el.dripDrop.classList.toggle('active', dripping);
+  if(dripping){
+    const dur=Math.max(0.3, 1.4-state.sliders.alkali*0.2-state.sliders.temp*0.08);
+    el.dripDrop.style.animationDuration=dur+'s';
+  }
+
+  // household marker
+  el.phMarker.setAttribute('transform','translate('+pHtoX(result.pH).toFixed(1)+',0)');
+
+  // steam (temperature)
+  const steamOpacity=clamp(state.sliders.temp/4,0,1)*0.85;
+  [el.steam1,el.steam2,el.steam3].forEach((s,i)=>{ s.style.opacity=state.sliders.temp>=2? (steamOpacity*(1-i*0.12)).toFixed(2):0; });
+
+  // bubbles (temperature)
+  const bubbling=state.sliders.temp>=3;
+  [el.bub1,el.bub2,el.bub3].forEach((b,i)=>{
+    b.classList.toggle('active', bubbling);
+    b.style.animationDelay=(i*0.5)+'s';
+  });
+
+  // mascot mouth: wellbeing proxy
+  const wellbeing=(result.completeness+result.indicatorAcc+result.volumeEq)/3;
+  let mouthPath;
+  if(wellbeing>60) mouthPath='M-14 14 Q0 26 14 14';
+  else if(wellbeing>=40) mouthPath='M-14 20 Q0 20 14 20';
+  else mouthPath='M-14 24 Q0 12 14 24';
+  el.mascotMouth.setAttribute('d', mouthPath);
+
+  // equation
+  const weak=state.sliders.acid<2;
+  el.eqAcid.textContent=weak?'CH₃COOH':'HCl';
+  el.eqSalt.textContent=weak?'CH₃COONa':'NaCl';
+
+  renderBarsLive(result);
+  return result;
+}
+
+function triggerEndpointFlash(){
+  el.endpointFlash.classList.remove('flash-active');
+  void el.endpointFlash.offsetWidth; // restart animation
+  el.endpointFlash.classList.add('flash-active');
+}
+
+/* ===================== BARS ===================== */
+function barColor(v){
+  if(v>60) return 'var(--green-bar)';
+  if(v>=30) return 'var(--amber-bar)';
+  return 'var(--red-bar)';
+}
+function renderBarsLive(result){
+  if(!el.barsGrid.children.length){
+    el.barsGrid.innerHTML=barDefs.map(b=>(
+      '<div class="bar-row" id="barrow-'+b.key+'">'+
+        '<div class="bh"><span class="name">'+b.label+'</span><span class="warn hidden" id="warn-'+b.key+'">⚠</span><span class="val" id="val-'+b.key+'">--</span></div>'+
+        '<div class="bar-track"><div class="bar-fill" id="fill-'+b.key+'"></div></div>'+
+      '</div>'
+    )).join('');
+  }
+  barDefs.forEach(b=>{
+    const v=b.get(result);
+    const fill=document.getElementById('fill-'+b.key);
+    const val=document.getElementById('val-'+b.key);
+    const warn=document.getElementById('warn-'+b.key);
+    fill.style.width=clamp(v,0,100)+'%';
+    fill.style.background=barColor(v);
+    val.textContent=b.display(result);
+    warn.classList.toggle('hidden', v>=20);
+  });
+}
+
+/* ===================== CHART ===================== */
+function renderChart(){
+  const canvas=el.metricsChart;
+  const dpr=window.devicePixelRatio||1;
+  const cssW=canvas.clientWidth||600, cssH=260;
+  canvas.width=cssW*dpr; canvas.height=cssH*dpr;
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,cssW,cssH);
+
+  const padL=38, padR=14, padT=14, padB=28;
+  const plotW=cssW-padL-padR, plotH=cssH-padT-padB;
+
+  // gridlines
+  ctx.strokeStyle='#d4e6f7'; ctx.lineWidth=1; ctx.font='11px Nunito'; ctx.fillStyle='#7d92a5';
+  for(let g=0; g<=4; g++){
+    const y=padT+plotH-(g/4)*plotH;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(cssW-padR,y); ctx.stroke();
+    ctx.fillText(g*25, 6, y+4);
+  }
+
+  const pts=state.history;
+  if(pts.length<1){
+    ctx.fillStyle='#9db0c2'; ctx.font='13px Nunito';
+    ctx.fillText('Advance through the rounds to build the chart…', padL, padT+plotH/2);
+    renderChartLegend();
+    return;
+  }
+  const n=pts.length;
+  const xFor=i=> n<=1 ? padL+plotW/2 : padL+(i/(n-1))*plotW;
+  const yFor=v=> padT+plotH-(clamp(v,0,100)/100)*plotH;
+
+  Object.keys(chartColors).forEach(key=>{
+    ctx.strokeStyle=chartColors[key]; ctx.lineWidth=2.4; ctx.beginPath();
+    pts.forEach((p,i)=>{
+      const v=key==='pH' ? clamp(p.pH/14*100,0,100) : p[key];
+      const x=xFor(i), y=yFor(v);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    pts.forEach((p,i)=>{
+      const v=key==='pH' ? clamp(p.pH/14*100,0,100) : p[key];
+      ctx.fillStyle=chartColors[key];
+      ctx.beginPath(); ctx.arc(xFor(i), yFor(v), 3.4, 0, Math.PI*2); ctx.fill();
+    });
+  });
+
+  // x labels
+  ctx.fillStyle='#51677d'; ctx.font='11px Nunito'; ctx.textAlign='center';
+  pts.forEach((p,i)=>{ ctx.fillText(p.label, xFor(i), cssH-8); });
+  ctx.textAlign='left';
+
+  renderChartLegend();
+}
+function renderChartLegend(){
+  const names={pH:'pH Value', completeness:'Neutralisation', indicatorAcc:'Indicator Accuracy', salt:'Salt Formed', volumeEq:'Volume Precision'};
+  el.chartLegend.innerHTML=Object.keys(chartColors).map(k=>(
+    '<span><i style="background:'+chartColors[k]+'"></i>'+names[k]+'</span>'
+  )).join('');
+}
+window.addEventListener('resize', ()=>{ if(state.history.length) renderChart(); });
+
+/* ===================== PHASE MANAGEMENT ===================== */
+function enterPhase(key, opts){
+  opts=opts||{};
+  state.phase=key;
+  const cfg=roundsConfig[key];
+  el.phaseBadge.textContent=cfg.badge;
+  el.phaseTitle.textContent=cfg.title;
+  el.phaseContext.textContent=cfg.context;
+  el.guidingQText.textContent=cfg.guiding;
+
+  if(!opts.keepSliders){
+    state.sliders={...cfg.defaults};
+  }
+  state.currentMods = opts.mods || {};
+  refreshSliderUI();
+
+  const isRound = key!=='explore';
+  el.predictBlock.style.display = isRound ? 'block':'none';
+  document.querySelectorAll('.predict-btn').forEach(b=>b.classList.toggle('selected', state.predictions[key]===b.dataset.val));
+  el.advanceBtn.textContent = isRound ? 'Advance ▶' : 'Advance to Round 1 ▶';
+  el.advanceBtn.disabled = isRound ? !state.predictions[key] : false;
+
+  el.sceneCaptionLeft.textContent = isRound ? 'Set sliders, lock a prediction, then Advance.' : 'Drag the sliders — the flask reacts instantly.';
+
+  renderTimeline();
+  updateSceneVisuals();
+}
+
+function currentRoundKey(){ return state.phase; }
+
+/* ===================== EVENTS (random cards) ===================== */
+function getEventForRound(roundKey){
+  if(roundKey==='round2' && !state.eventsShown.round2){
+    const prev=state.history.find(h=>h.roundKey==='round1');
+    let phShift=-0.8, resilientNote='';
+    if(prev && prev.volumeEq>=70){ phShift=-0.4; resilientNote='Your precise Round 1 volume control softened the impact by half!'; }
+    return {
+      key:'round2', icon:'🌡️', title:'Lab Heatwave!',
+      text:'The air-conditioning just broke. The whole lab is warmer than expected, on top of whatever temperature you dial in.',
+      effectText:'Effect: an extra pH drop is applied this round (simulating the raised ambient heat).'+(resilientNote? ' '+resilientNote:''),
+      mods:{phShift}
+    };
+  }
+  if(roundKey==='round3' && !state.eventsShown.round3){
+    const prev=state.history.find(h=>h.roundKey==='round2');
+    let indicatorPenalty=15, note='';
+    if(prev && prev.indicatorAcc>=95){ indicatorPenalty=25; note='Your Round 2 indicator reading was suspiciously perfect — over-optimised setups are fragile, so this event hits harder.'; }
+    else if(prev && prev.completeness>=70){ indicatorPenalty=Math.max(5,indicatorPenalty-5); note='Your solid Round 2 neutralisation technique reduced the damage.'; }
+    return {
+      key:'round3', icon:'🧪', title:'Contaminated Glassware!',
+      text:'Someone left residue in the flask from the last class. Your indicator reading will be a little unreliable this round.',
+      effectText:'Effect: indicator colour accuracy takes a penalty this round.'+(note? ' '+note:''),
+      mods:{indicatorPenalty}
+    };
+  }
+  return null;
+}
+
+function showEventModal(event, onContinue){
+  const overlay=document.createElement('div');
+  overlay.className='overlay';
+  overlay.innerHTML=
+    '<div class="modal event-modal">'+
+      '<div class="event-icon">'+event.icon+'</div>'+
+      '<h2>'+event.title+'</h2>'+
+      '<p>'+event.text+'</p>'+
+      '<div class="event-effect">'+event.effectText+'</div>'+
+      '<div class="advance-row"><button class="btn-primary" id="eventContinueBtn">Continue ▶</button></div>'+
+    '</div>';
+  document.body.appendChild(overlay);
+  document.getElementById('eventContinueBtn').onclick=()=>{
+    overlay.remove();
+    onContinue();
+  };
+}
+
+/* ===================== ADVANCE LOGIC ===================== */
+function handleAdvance(){
+  if(state.phase==='explore'){
+    // push baseline point
+    const baseline=computeState(state.sliders,{});
+    state.history.push({label:'Start', roundKey:'explore', ...baseline, category:categorize(baseline).key});
+    renderChart();
+    goToRound('round1');
+    return;
+  }
+  // it's a round
+  const roundKey=state.phase;
+  const cfg=roundsConfig[roundKey];
+  const result=computeState(state.sliders, state.currentMods);
+  const cat=categorize(result);
+  state.history.push({label:'Round '+cfg.roundNum, roundKey, ...result, category:cat.key});
+  triggerEndpointFlash();
+  renderChart();
+  showResultsModal(roundKey, result, cat);
+}
+
+function goToRound(roundKey){
+  const event=getEventForRound(roundKey);
+  if(event){
+    state.eventsShown[roundKey]=true;
+    showEventModal(event, ()=>{ enterPhase(roundKey, {mods:event.mods}); showToast(event.icon+' '+event.title+' — round conditions adjusted.', 'warn'); });
+  } else {
+    enterPhase(roundKey, {});
+  }
+}
+
+/* ===================== RESULTS MODAL ===================== */
+function arrowHtml(cls){
+  const symbol = cls==='up' ? '▲' : (cls==='down' ? '▼' : '—');
+  return '<span class="arrow-'+cls+'">'+symbol+'</span>';
+}
+function buildOutcomeGrid(result, prevResult){
+  return barDefs.map(b=>{
+    const v=b.get(result);
+    let arrowCls='flat';
+    if(prevResult){
+      const pv=b.get(prevResult);
+      if(v>pv+1) arrowCls='up'; else if(v<pv-1) arrowCls='down';
+    }
+    return '<div class="outcome-item"><span>'+b.label+'</span><span>'+arrowHtml(arrowCls)+' '+b.display(result)+'</span></div>';
+  }).join('');
+}
+function buildChainText(roundKey, sliders, result){
+  const acidText=acidLabels[sliders.acid].split(' (')[0];
+  const alkaliText=alkaliLabels[sliders.alkali];
+  return 'A → You set acid strength to <b>"'+acidText+'"</b> (starting pH ≈ '+result.startPH.toFixed(1)+'). '+
+    'B → You added alkali until <b>"'+alkaliText+'"</b>. '+
+    'C → The flask settled at <b>pH '+result.pH.toFixed(2)+'</b>, with neutralisation <b>'+Math.round(result.completeness)+'% complete</b> and indicator accuracy of <b>'+Math.round(result.indicatorAcc)+'%</b>.';
+}
+function buildAltScenario(roundKey, sliders, mods){
+  const altSliders={...sliders, alkali: sliders.alkali<=2? 4 : 0};
+  const altResult=computeState(altSliders, mods);
+  const dir = sliders.alkali<=2 ? 'kept adding alkali well past equivalence' : 'stopped before adding any alkali at all';
+  return '🔄 If you had instead <b>'+dir+'</b>: pH would land at <b>'+altResult.pH.toFixed(2)+'</b>, with neutralisation <b>'+Math.round(altResult.completeness)+'%</b> complete and salt formed at <b>'+Math.round(altResult.salt)+'%</b>.';
+}
+
+function showResultsModal(roundKey, result, cat){
+  const cfg=roundsConfig[roundKey];
+  const predicted=state.predictions[roundKey];
+  const predictedLabel={thriving:'🌱 Thriving',stable:'⚖️ Stable',stressed:'⚠️ Resources Stressed',crisis:'🔴 Crisis'}[predicted];
+  const correct = predicted===cat.key;
+
+  // previous result for comparison (previous round, or baseline)
+  const idx=state.history.length-2; // last is current, previous is idx
+  const prevResult = idx>=0 ? state.history[idx] : null;
+
+  const overlay=document.createElement('div');
+  overlay.className='overlay';
+  overlay.innerHTML=
+    '<div class="modal">'+
+      '<div class="result-badge '+cat.key+'">'+cat.emoji+' '+cat.label+'</div>'+
+      '<h2>'+cfg.title+' — Result</h2>'+
+      '<div class="sub">Round '+cfg.roundNum+' of 3</div>'+
+      '<div class="pred-compare">Your prediction: <b>'+predictedLabel+'</b> &nbsp;→&nbsp; Actual: <b>'+cat.emoji+' '+cat.label+'</b> &nbsp;'+(correct? '✅ Nice call!':'❌ Not quite — see the chain below.')+'</div>'+
+      '<div class="outcome-grid">'+buildOutcomeGrid(result, prevResult)+'</div>'+
+      '<div class="chain-box"><b>Cause → Effect chain:</b><br>'+buildChainText(roundKey, state.sliders, result)+'</div>'+
+      '<div class="think-box">💡 IB Thinking Prompt: '+cfg.think+'</div>'+
+      '<div class="echo-box"><div class="et">'+cfg.echo.title+'</div><div class="eb">'+cfg.echo.text+'</div></div>'+
+      '<div class="alt-box" id="altBox"></div>'+
+      '<div class="modal-actions">'+
+        '<button class="btn" id="altBtn">🔄 Show Alternative Choice</button>'+
+        '<button class="btn-primary" id="continueBtn">Continue ▶</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(overlay);
+
+  document.getElementById('altBtn').onclick=()=>{
+    const box=document.getElementById('altBox');
+    box.innerHTML=buildAltScenario(roundKey, state.sliders, state.currentMods);
+    box.classList.add('shown');
+  };
+  document.getElementById('continueBtn').onclick=()=>{
+    overlay.remove();
+    proceedAfterRound(roundKey);
+  };
+
+  showToast('Round '+cfg.roundNum+' locked in: '+cat.emoji+' '+cat.label, correct?'good':undefined);
+}
+
+function proceedAfterRound(roundKey){
+  const idx=roundOrder.indexOf(roundKey);
+  if(idx<roundOrder.length-1){
+    goToRound(roundOrder[idx+1]);
+  } else {
+    // finished round3
+    el.designPanel.classList.remove('hidden');
+    populateWorstRoundSelect();
+    showToast('🎉 All 3 rounds complete! Design Your Own + Reflection unlocked.', 'good');
+    state.phase='design';
+    renderTimeline();
+    el.phaseBadge.textContent='Complete';
+    el.phaseTitle.textContent='All Rounds Complete — Explore Freely or Reflect';
+    el.phaseContext.textContent='Keep adjusting sliders below for free play, try Design Your Own mode, or head to the Reflection panel.';
+    el.predictBlock.style.display='none';
+    el.advanceBtn.disabled=true;
+    el.advanceBtn.textContent='All Rounds Complete ✓';
+    setTimeout(()=>{ el.designPanel.scrollIntoView({behavior:'smooth', block:'start'}); }, 400);
+  }
+}
+
+/* ===================== PREDICTIONS ===================== */
+function bindPredictionButtons(){
+  el.predictGrid.querySelectorAll('.predict-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const roundKey=state.phase;
+      if(!roundsConfig[roundKey] || roundKey==='explore') return;
+      state.predictions[roundKey]=btn.dataset.val;
+      el.predictGrid.querySelectorAll('.predict-btn').forEach(b=>b.classList.toggle('selected', b===btn));
+      el.advanceBtn.disabled=false;
+      showToast('Prediction locked: '+btn.textContent.trim());
+    });
+  });
+}
+
+/* ===================== SLIDERS BINDING ===================== */
+function bindSliders(){
+  el.sldAcid.addEventListener('input', e=>{ state.sliders.acid=Number(e.target.value); refreshSliderUI(); updateSceneVisuals(); });
+  el.sldAlkali.addEventListener('input', e=>{ state.sliders.alkali=Number(e.target.value); refreshSliderUI(); updateSceneVisuals(); });
+  el.sldIndicator.addEventListener('input', e=>{ state.sliders.indicator=Number(e.target.value); refreshSliderUI(); updateSceneVisuals(); });
+  el.sldTemp.addEventListener('input', e=>{ state.sliders.temp=Number(e.target.value); refreshSliderUI(); updateSceneVisuals(); });
+}
+
+/* ===================== ADVISOR CHIPS (tap support) ===================== */
+function bindAdvisors(){
+  document.querySelectorAll('.advisor-chip button').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      document.querySelectorAll('.advisor-chip button').forEach(b=>{ if(b!==btn) b.classList.remove('tapped'); });
+      btn.classList.toggle('tapped');
+      e.stopPropagation();
+    });
+  });
+  document.addEventListener('click', ()=>{ document.querySelectorAll('.advisor-chip button').forEach(b=>b.classList.remove('tapped')); });
+}
+
+/* ===================== DESIGN YOUR OWN ===================== */
+function bindDesignMode(){
+  el.dyoRunBtn.addEventListener('click', ()=>{
+    const custom={
+      acid: clamp(Number(el.dyoAcid.value)||0, -2, 6),
+      alkali: clamp(Number(el.dyoAlkali.value)||0, -2, 6),
+      indicator: clamp(Number(el.dyoIndicator.value)||0, -2, 6),
+      temp: clamp(Number(el.dyoTemp.value)||0, -2, 6)
+    };
+    const result=computeState(custom, {});
+    const cat=categorize(result);
+    const reason=el.dyoReason.value.trim();
+    el.dyoResult.innerHTML=
+      '<b>'+cat.emoji+' '+cat.label+'</b> — pH '+result.pH.toFixed(2)+', Neutralisation '+Math.round(result.completeness)+'%, '+
+      'Indicator accuracy '+Math.round(result.indicatorAcc)+'%, Salt formed '+Math.round(result.salt)+'%, Volume precision '+Math.round(result.volumeEq)+'%.'+
+      (reason? '<br><br><i>Your reasoning: "'+reason+'"</i>' : '<br><br><i>Tip: add your reasoning above before running the next test.</i>');
+    el.dyoResult.classList.add('shown');
+    showToast('Custom experiment run — check the result below.');
+  });
+}
+
+/* ===================== REFLECTION ===================== */
+function populateWorstRoundSelect(){
+  const rounds=state.history.filter(h=>h.roundKey!=='explore');
+  if(!rounds.length){ el.worstRoundSelect.innerHTML='<option>No rounds completed yet</option>'; return; }
+  el.worstRoundSelect.innerHTML=rounds.map(r=>{
+    const score=Math.round((r.completeness+r.indicatorAcc+r.volumeEq)/3);
+    return '<option value="'+r.roundKey+'">'+r.label+' — score '+score+' ('+r.category+')</option>';
+  }).join('');
+  // auto-select worst
+  let worst=rounds[0], worstScore=999;
+  rounds.forEach(r=>{
+    const score=(r.completeness+r.indicatorAcc+r.volumeEq)/3;
+    if(score<worstScore){ worstScore=score; worst=r; }
+  });
+  el.worstRoundSelect.value=worst.roundKey;
+}
+function bindReflection(){
+  el.reflectionNavBtn.addEventListener('click', ()=>{
+    el.reflectionPanel.classList.remove('hidden');
+    populateWorstRoundSelect();
+    el.reflectionPanel.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  el.saveFinalChallenge.addEventListener('click', ()=>{
+    const text=el.finalChallengeText.value.trim();
+    if(!text){ showToast('Write your redesign first!', 'warn'); return; }
+    showToast('🏁 Redesign saved. Nice thinking!', 'good');
+  });
+  el.saveReflectionBtn.addEventListener('click', ()=>{
+    const answered=[...document.querySelectorAll('.reflection-panel textarea[data-q]')].filter(t=>t.value.trim().length>0).length;
+    showToast('📓 Reflection saved ('+answered+'/6 questions answered).', 'good');
+  });
+}
+
+/* ===================== RESET ===================== */
+function resetAll(){
+  document.querySelectorAll('.overlay').forEach(o=>o.remove());
+  state={
+    phase:'explore',
+    sliders:{...roundsConfig.explore.defaults},
+    predictions:{round1:null, round2:null, round3:null},
+    history:[],
+    currentMods:{},
+    eventsShown:{round2:false, round3:false},
+    liveResult:null
+  };
+  el.designPanel.classList.add('hidden');
+  el.reflectionPanel.classList.add('hidden');
+  document.querySelectorAll('.reflection-panel textarea').forEach(t=>t.value='');
+  el.finalChallengeText.value='';
+  el.dyoResult.classList.remove('shown');
+  el.barsGrid.innerHTML='';
+  enterPhase('explore', {});
+  renderChart();
+  showToast('Simulation reset ↺');
+}
+
+/* ===================== INIT ===================== */
+function init(){
+  cache();
+  bindSliders();
+  bindPredictionButtons();
+  bindAdvisors();
+  bindDesignMode();
+  bindReflection();
+
+  el.startBtn.addEventListener('click', ()=>{
+    document.getElementById('splash').classList.add('hidden');
+    el.simRoot.classList.remove('hidden');
+    enterPhase('explore', {});
+    renderChart();
+    showToast('🧪 Lab ready. Try the sliders!');
+  });
+
+  el.advanceBtn.addEventListener('click', handleAdvance);
+  el.resetBtn.addEventListener('click', resetAll);
+
+  renderTimeline();
+}
+document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
